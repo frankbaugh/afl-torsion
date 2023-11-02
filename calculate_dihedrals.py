@@ -150,9 +150,9 @@ def vectors_to_dihedral(atom1, atom2, atom3, atom4):
     dihedral = [np.sin(single_dihedral), np.cos(single_dihedral)]
     return dihedral
 
-def residue_to_torsions(resi_name):
+def residue_to_torsions(resi_name, *coords):
     torsion_angles = []
-    atoms_in_dihedral = chi_angles_atoms[resi_name]
+    
     print(atoms_in_dihedral)
     # Ordered list of lists chi_1, chi_2 etc
 
@@ -187,7 +187,10 @@ for file in tqdm(filelist):
         if resi_name not in aas: continue
         torsion_angles = []
         try:
-            torsion_angles = residue_to_torsions(resi_name)
+            atoms_in_dihedral = chi_angles_atoms[resi_name]
+            dihedral_atom_coords = [resi[atom].get_vector() for atom in atoms_in_dihedral]
+            torsion_angles = [vectors_to_dihedral(dihedral_atom_coords[chi] for chi in range(4))]
+            
             print(f"torsion angles: f{torsion_angles}")
             protein_res_torsions.append(torsion_angles)
             protein_res_masks.append(chi_angles_mask[resi_name])
