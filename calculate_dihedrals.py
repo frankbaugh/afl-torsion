@@ -152,7 +152,9 @@ def vectors_to_dihedral(atom1, atom2, atom3, atom4):
 
 def residue_to_torsions(residue):
     torsion_angles = []
-    atoms_in_dihedral = chi_angles_atoms[residue.get_name()] # Ordered list of lists chi_1, chi_2 etc
+    atoms_in_dihedral = chi_angles_atoms[residue.get_name()]
+    print(atoms_in_dihedral)
+    # Ordered list of lists chi_1, chi_2 etc
 
     for chi in atoms_in_dihedral: # calculate each angle, append to torsion_angles
         coord_list = [resi[atom].get_vector for atom in chi]
@@ -164,9 +166,11 @@ def residue_to_torsions(residue):
     return torsion_angles
 
 
-filelist = get_filelist()
+filelist = get_filelist()[0:2]
+print(filelist)
 for file in tqdm(filelist):
     protein_id = file.replace('_protein.pdb', '')
+    print(f'id: f{protein_id}')
     filepath = os.path.join(PDB_DIR, protein_id, file)
     print(filepath)
     parser=PDBParser()
@@ -181,14 +185,17 @@ for file in tqdm(filelist):
     for resi in residues:
         resi_name = resi.get_resname() 
         if resi_name not in aas: continue
-
         torsion_angles = []
         try:
             torsion_angles = residue_to_torsions(resi)
+            print(f"torsion angles: f{torsion_angles}")
             protein_res_torsions.append(torsion_angles)
             protein_res_masks.append(chi_angles_mask[resi_name])
+            print(protein_res_masks)
 
-        except:
+        except Exception as e:
+
+            print(e)
             wf.write(f'torsion error: {protein_id}, {resi_name}' + '\n')
             protein_res_torsions.append([[0,0], [0,0], [0,0], [0,0], [0,0]])
             protein_res_masks.append([0,0,0,0,0])
