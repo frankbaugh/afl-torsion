@@ -1,5 +1,6 @@
 import pandas as pd
 from Bio.PDB.PDBParser import PDBParser
+from Bio.PDB import calc_dihedral
 import numpy as np
 import pickle
 import os
@@ -57,32 +58,32 @@ chi_angles_atoms = {
 
 # If chi angles given in fixed-length array, this matrix determines how to mask
 # them for each AA type. The order is as per restype_order (see below).
-chi_angles_mask = [
-    [0.0, 0.0, 0.0, 0.0],  # ALA
-    [1.0, 1.0, 1.0, 1.0],  # ARG
-    [1.0, 1.0, 0.0, 0.0],  # ASN
-    [1.0, 1.0, 0.0, 0.0],  # ASP
-    [1.0, 0.0, 0.0, 0.0],  # CYS
-    [1.0, 1.0, 1.0, 0.0],  # GLN
-    [1.0, 1.0, 1.0, 0.0],  # GLU
-    [0.0, 0.0, 0.0, 0.0],  # GLY
-    [1.0, 1.0, 0.0, 0.0],  # HIS
-    [1.0, 1.0, 0.0, 0.0],  # ILE
-    [1.0, 1.0, 0.0, 0.0],  # LEU
-    [1.0, 1.0, 1.0, 1.0],  # LYS
-    [1.0, 1.0, 1.0, 0.0],  # MET
-    [1.0, 1.0, 0.0, 0.0],  # PHE
-    [1.0, 1.0, 0.0, 0.0],  # PRO
-    [1.0, 0.0, 0.0, 0.0],  # SER
-    [1.0, 0.0, 0.0, 0.0],  # THR
-    [1.0, 1.0, 0.0, 0.0],  # TRP
-    [1.0, 1.0, 0.0, 0.0],  # TYR
-    [1.0, 0.0, 0.0, 0.0],  # VAL
-]
+chi_angles_mask = {
+    "ALA": [0.0, 0.0, 0.0, 0.0],  # ALA
+    "ARG":[1.0, 1.0, 1.0, 1.0],  # ARG
+    "ASN":[1.0, 1.0, 0.0, 0.0],  # ASN
+    "ASP":[1.0, 1.0, 0.0, 0.0],  # ASP
+    "CYS":[1.0, 0.0, 0.0, 0.0],  # CYS
+    "GLN":[1.0, 1.0, 1.0, 0.0],  # GLN
+    "GLU":[1.0, 1.0, 1.0, 0.0],  # GLU
+    "GLY":[0.0, 0.0, 0.0, 0.0],  # GLY
+    "HIS":[1.0, 1.0, 0.0, 0.0],  # HIS
+    "ILE":[1.0, 1.0, 0.0, 0.0],  # ILE
+    "LEU":[1.0, 1.0, 0.0, 0.0],  # LEU
+    "LYS":[1.0, 1.0, 1.0, 1.0],  # LYS
+    "MET":[1.0, 1.0, 1.0, 0.0],  # MET
+    "PHE":[1.0, 1.0, 0.0, 0.0],  # PHE
+    "PRO":[1.0, 1.0, 0.0, 0.0],  # PRO
+    "SER":[1.0, 0.0, 0.0, 0.0],  # SER
+    "THR":[1.0, 0.0, 0.0, 0.0],  # THR
+    "TRP":[1.0, 1.0, 0.0, 0.0],  # TRP
+    "TYR":[1.0, 1.0, 0.0, 0.0],  # TYR
+    "VAL":[1.0, 0.0, 0.0, 0.0],  # VAL
+}
 
 # The following chi angles are pi periodic: they can be rotated by a multiple
 # of pi without affecting the structure.
-chi_pi_periodic = [
+chi_pi_periodic = {
     [0.0, 0.0, 0.0, 0.0],  # ALA
     [0.0, 0.0, 0.0, 0.0],  # ARG
     [0.0, 0.0, 0.0, 0.0],  # ASN
@@ -104,7 +105,7 @@ chi_pi_periodic = [
     [0.0, 1.0, 0.0, 0.0],  # TYR
     [0.0, 0.0, 0.0, 0.0],  # VAL
     [0.0, 0.0, 0.0, 0.0],  # UNK
-]
+}
 
 aas=["ALA",
 "ARG",
@@ -146,28 +147,12 @@ wf=open('error_pdb_dihedrals.txt','w')
 def vectors_to_dihedral(vectors):
     
     # Bio calculates dihedral in radians i [-π, π]
-    single_dihedral = PDB.calc_dihedral(vectors[0], vectors[1], vectors[2], vectors[3])
+    single_dihedral = calc_dihedral(vectors[0], vectors[1], vectors[2], vectors[3])
     # Project the dihedral onto the unit circle
     dihedral = [np.sin(single_dihedral), np.cos(single_dihedral)]
     return dihedral
 
-def residue_to_torsions(resi_name, *coords):
-    torsion_angles = []
-    
-    print(atoms_in_dihedral)
-    # Ordered list of lists chi_1, chi_2 etc
-
-    for chi in atoms_in_dihedral: # calculate each angle, append to torsion_angles
-        coord_list = [resi[atom].get_vector for atom in chi]
-        print(f'coord_list: {coord_list}')
-        dihedral = vectors_to_dihedral(*coord_list)
-        print(f'dihedral: {dihedral}')
-        torsion_angles.append(dihedral)
-    
-    return torsion_angles
-
-
-filelist = get_filelist()[0:2]
+filelist = get_filelist()[0:1]
 print(filelist)
 for file in tqdm(filelist):
     protein_id = file.replace('_protein.pdb', '')
