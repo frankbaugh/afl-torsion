@@ -183,8 +183,6 @@ for file in tqdm(filelist):
             protein_res_masks.append(chi_angles_mask[resi_name])
             
             print(f"torsion angles: f{torsion_angles}")
-            
-            print(protein_res_masks)
 
         except Exception as e:
 
