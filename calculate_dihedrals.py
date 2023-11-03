@@ -143,9 +143,10 @@ def get_filelist():
 
 wf=open('error_pdb_dihedrals.txt','w')
 
-def vectors_to_dihedral(atom1, atom2, atom3, atom4):
+def vectors_to_dihedral(vectors):
+    
     # Bio calculates dihedral in radians i [-π, π]
-    single_dihedral = PDB.calc_dihedral(atom1, atom2, atom3, atom4)
+    single_dihedral = PDB.calc_dihedral(vectors[0], vectors[1], vectors[2], vectors[3])
     # Project the dihedral onto the unit circle
     dihedral = [np.sin(single_dihedral), np.cos(single_dihedral)]
     return dihedral
@@ -187,13 +188,17 @@ for file in tqdm(filelist):
         if resi_name not in aas: continue
         torsion_angles = []
         try:
-            atoms_in_dihedral = chi_angles_atoms[resi_name]
-            dihedral_atom_coords = [resi[atom].get_vector() for atom in atoms_in_dihedral]
-            torsion_angles = [vectors_to_dihedral(dihedral_atom_coords[chi] for chi in range(4))]
+            atoms_in_dihedral = chi_angles_atoms[resi_name] # Shape [n_torsions, 4]
+            for chi in atoms_in_dihedral:
+                dihedral_atom_coords = [resi[atom].get_vector() for atom in chi] # Shape [4, 3]
+                dihedral = vectors_to_dihedral(dihedral_atom_coords)
+                torsion_angles.append(dihedral)
             
-            print(f"torsion angles: f{torsion_angles}")
             protein_res_torsions.append(torsion_angles)
             protein_res_masks.append(chi_angles_mask[resi_name])
+            
+            print(f"torsion angles: f{torsion_angles}")
+            
             print(protein_res_masks)
 
         except Exception as e:
