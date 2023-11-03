@@ -83,7 +83,7 @@ chi_angles_mask = {
 
 # The following chi angles are pi periodic: they can be rotated by a multiple
 # of pi without affecting the structure.
-chi_pi_periodic = {
+chi_pi_periodic = [
     [0.0, 0.0, 0.0, 0.0],  # ALA
     [0.0, 0.0, 0.0, 0.0],  # ARG
     [0.0, 0.0, 0.0, 0.0],  # ASN
@@ -105,7 +105,7 @@ chi_pi_periodic = {
     [0.0, 1.0, 0.0, 0.0],  # TYR
     [0.0, 0.0, 0.0, 0.0],  # VAL
     [0.0, 0.0, 0.0, 0.0],  # UNK
-}
+]
 
 aas=["ALA",
 "ARG",
