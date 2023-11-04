@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 PDB_DIR='/rds/project/rds-a1NGKrlJtrw/dyna_mol/v2020-other-PL/'
 DATA_DIR='/rds/project/rds-a1NGKrlJtrw/dyna_mol/data_PDBBind_1024/'
-DIHEDRAL_DIR='/home/fmvb2/torsion/dihedral_folder/'
+DIHEDRAL_DIR='/home/fmvb2/dihedral_folder/'
 
 chi_angles_atoms = {
     "ALA": [],
@@ -171,14 +171,15 @@ for file in tqdm(filelist):
             atoms_in_dihedral = chi_angles_atoms[resi_name] # Shape [n_torsions, 4]
             for chi in atoms_in_dihedral:
                 dihedral_atom_coords = [resi[atom].get_vector() for atom in chi] # Shape [4, 3]
+                assert dihedral_atom_coords
                 dihedral = vectors_to_dihedral(dihedral_atom_coords)
                 torsion_angles.append(dihedral)
             
             protein_res_torsions.append(torsion_angles)
             protein_res_masks.append(chi_angles_mask[resi_name])
             
-            if not torsion_angles:
-                print(f"empty torsion: {torsion_angles}, res = {resi_name}, protein = {protein_id}")
+            #if not torsion_angles:
+                #print(f"empty torsion: {torsion_angles}, res = {resi_name}, protein = {protein_id}")
 
         except Exception as e:
 
@@ -191,6 +192,7 @@ for file in tqdm(filelist):
         except:
             wf.write(file+'\n')
             continue
+        
         
     dihedral_angles={'dihedrals': protein_res_torsions, 'dihedral_masks': protein_res_masks}
     with open(DIHEDRAL_DIR + protein_id + '.pickle', 'wb') as wbf:
