@@ -136,24 +136,19 @@ def get_filelist():
         for file in files:
             if 'protein.pdb' in file:
                 filelist.append(file)
-    
-
-
 #print(filelist)
     return filelist
 
 wf=open('error_pdb_dihedrals.txt','w')
 
 def vectors_to_dihedral(vectors):
-    
     # Bio calculates dihedral in radians i [-π, π]
     single_dihedral = calc_dihedral(vectors[0], vectors[1], vectors[2], vectors[3])
     # Project the dihedral onto the unit circle
     dihedral = [np.sin(single_dihedral), np.cos(single_dihedral)]
     return dihedral
 
-filelist = get_filelist()[0:1]
-print(filelist)
+filelist = get_filelist()
 for file in tqdm(filelist):
     protein_id = file.replace('_protein.pdb', '')
     print(f'id: f{protein_id}')
