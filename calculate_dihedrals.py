@@ -177,7 +177,8 @@ for file in tqdm(filelist):
             protein_res_torsions.append(torsion_angles)
             protein_res_masks.append(chi_angles_mask[resi_name])
             
-            print(f"torsion angles: f{torsion_angles}")
+            if not torsion_angles:
+                print(f"empty torsion: {torsion_angles}, res = {resi_name}, protein = {protein_id}")
 
         except Exception as e:
 
