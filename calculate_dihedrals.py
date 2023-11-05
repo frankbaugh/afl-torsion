@@ -183,7 +183,7 @@ for file in tqdm(filelist):
 
         except Exception as e:
 
-            traceback.print_exc()
+            #traceback.print_exc()
             print(f'torsion error: {protein_id}, {resi_name}' + '\n')
             protein_res_torsions.append([[0,0], [0,0], [0,0], [0,0]])
             protein_res_masks.append([0,0,0,0])
