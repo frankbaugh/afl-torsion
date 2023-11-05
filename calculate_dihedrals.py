@@ -3,7 +3,7 @@ from Bio.PDB.PDBParser import PDBParser
 from Bio.PDB import calc_dihedral
 import numpy as np
 import pickle
-import os
+import os, traceback
 from tqdm import tqdm
 
 PDB_DIR='/rds/project/rds-a1NGKrlJtrw/dyna_mol/v2020-other-PL/'
@@ -184,8 +184,8 @@ for file in tqdm(filelist):
 
         except Exception as e:
 
-            print(e)
-            wf.write(f'torsion error: {protein_id}, {resi_name}' + '\n')
+            traceback.print_exc()
+            print(f'torsion error: {protein_id}, {resi_name}' + '\n')
             protein_res_torsions.append([[0,0], [0,0], [0,0], [0,0], [0,0]])
             protein_res_masks.append([0,0,0,0,0])
         try:
