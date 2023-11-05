@@ -169,8 +169,7 @@ for file in tqdm(filelist):
         torsion_angles = np.zeros([5, 2])
         try:
             atoms_in_dihedral = chi_angles_atoms[resi_name] # Shape [n_torsions, 4]
-            for chi, idx in enumerate(atoms_in_dihedral):
-                print(chi)
+            for idx, chi in enumerate(atoms_in_dihedral):
                 dihedral_atom_coords = [resi[atom].get_vector() for atom in chi] # Shape [4, 3]
                 assert dihedral_atom_coords
                 dihedral = vectors_to_dihedral(dihedral_atom_coords)
