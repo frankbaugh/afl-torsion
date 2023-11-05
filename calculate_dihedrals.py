@@ -166,14 +166,15 @@ for file in tqdm(filelist):
     for resi in residues:
         resi_name = resi.get_resname() 
         if resi_name not in aas: continue
-        torsion_angles = []
+        torsion_angles = np.zeros([5, 2])
         try:
             atoms_in_dihedral = chi_angles_atoms[resi_name] # Shape [n_torsions, 4]
-            for chi in atoms_in_dihedral:
+            for chi, idx in enumerate(atoms_in_dihedral):
                 dihedral_atom_coords = [resi[atom].get_vector() for atom in chi] # Shape [4, 3]
                 assert dihedral_atom_coords
                 dihedral = vectors_to_dihedral(dihedral_atom_coords)
-                torsion_angles.append(dihedral)
+                torsion_angles[idx, :] = dihedral
+                print(torsion_angles)
             
             protein_res_torsions.append(torsion_angles)
             protein_res_masks.append(chi_angles_mask[resi_name])
