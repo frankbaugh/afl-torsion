@@ -60,8 +60,8 @@ for file in tqdm(filelist):
         residues_shengyu += list(chain.get_residues())
 
 print("My residues:")
-print(residues_mine[0:20])
+print(residues_mine)
 
 print()
 print("shengyu residues")
-print(residues_shengyu[0:20])
+print(residues_shengyu)
