@@ -153,7 +153,7 @@ for file in tqdm(filelist):
     protein_id = file.replace('_protein.pdb', '')
     print(f'id: f{protein_id}')
     filepath = os.path.join(PDB_DIR, protein_id, file)
-    parser=PDBParser()
+    parser=PDBParser(QUIET=True)
     structure=parser.get_structure(protein_id, filepath)
     
     residues= structure.get_residues()
