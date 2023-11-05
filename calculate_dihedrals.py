@@ -174,7 +174,6 @@ for file in tqdm(filelist):
                 assert dihedral_atom_coords
                 dihedral = vectors_to_dihedral(dihedral_atom_coords)
                 torsion_angles[idx, :] = dihedral
-                print(torsion_angles)
             
             protein_res_torsions.append(torsion_angles)
             protein_res_masks.append(chi_angles_mask[resi_name])
