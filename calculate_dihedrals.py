@@ -153,13 +153,10 @@ for file in tqdm(filelist):
     protein_id = file.replace('_protein.pdb', '')
     print(f'id: f{protein_id}')
     filepath = os.path.join(PDB_DIR, protein_id, file)
-    print(filepath)
     parser=PDBParser()
     structure=parser.get_structure(protein_id, filepath)
     
-    residues= structure.get_residues() # Is this the same as below?
-    #for chain in list(structure[0].get_chains()):
-    #    residues+=list(chain.get_residues()
+    residues= structure.get_residues()
     protein_res_torsions=[]
     protein_res_masks=[]
     
@@ -171,7 +168,6 @@ for file in tqdm(filelist):
             atoms_in_dihedral = chi_angles_atoms[resi_name] # Shape [n_torsions, 4]
             for idx, chi in enumerate(atoms_in_dihedral):
                 dihedral_atom_coords = [resi[atom].get_vector() for atom in chi] # Shape [4, 3]
-                assert dihedral_atom_coords
                 dihedral = vectors_to_dihedral(dihedral_atom_coords)
                 torsion_angles[idx, :] = dihedral
             
@@ -184,7 +180,7 @@ for file in tqdm(filelist):
         except Exception as e:
 
             #traceback.print_exc()
-            print(f'torsion error: {protein_id}, {resi_name}' + '\n')
+            wf.write(f'torsion error: {protein_id}, {resi_name}' + '\n')
             protein_res_torsions.append([[0,0], [0,0], [0,0], [0,0]])
             protein_res_masks.append([0,0,0,0])
         try:
