@@ -166,7 +166,7 @@ for file in tqdm(filelist):
     for resi in residues:
         resi_name = resi.get_resname() 
         if resi_name not in aas: continue
-        torsion_angles = np.zeros([5, 2])
+        torsion_angles = np.zeros([4, 2])
         try:
             atoms_in_dihedral = chi_angles_atoms[resi_name] # Shape [n_torsions, 4]
             for idx, chi in enumerate(atoms_in_dihedral):
@@ -186,8 +186,8 @@ for file in tqdm(filelist):
 
             traceback.print_exc()
             print(f'torsion error: {protein_id}, {resi_name}' + '\n')
-            protein_res_torsions.append([[0,0], [0,0], [0,0], [0,0], [0,0]])
-            protein_res_masks.append([0,0,0,0,0])
+            protein_res_torsions.append([[0,0], [0,0], [0,0], [0,0]])
+            protein_res_masks.append([0,0,0,0])
         try:
             assert len(protein_res_torsions) == len(residues)
         except:
