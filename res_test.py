@@ -1,4 +1,3 @@
-from calculate_dihedrals import 
 
 import pandas as pd
 from Bio.PDB.PDBParser import PDBParser
