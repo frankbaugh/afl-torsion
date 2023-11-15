@@ -113,7 +113,7 @@ def get_filelist():
         for file in files:
             if 'protein.pdb' in file:
                 filelist.append(file)
-#print(filelist)
+
     return filelist
 
 wf=open('error_pdb_dihedrals.txt','w')
@@ -126,6 +126,8 @@ def vectors_to_dihedral(vectors):
     return dihedral
 
 filelist = get_filelist()
+error_files = []
+
 for file in tqdm(filelist):
     protein_id = file.replace('_protein.pdb', '')
     print(f'id: f{protein_id}')
@@ -135,7 +137,7 @@ for file in tqdm(filelist):
     
     residues= structure.get_residues()
     protein_res_torsions=[]
-    protein_res_masks=[]
+    aa_list=[]
     
     for resi in residues:
         resi_name = resi.get_resname() 
@@ -149,7 +151,7 @@ for file in tqdm(filelist):
                 torsion_angles[idx, :] = dihedral
             
             protein_res_torsions.append(torsion_angles)
-            protein_res_masks.append(chi_angles_mask[resi_name])
+            aa_list.append(resi_name)
             
             #if not torsion_angles:
                 #print(f"empty torsion: {torsion_angles}, res = {resi_name}, protein = {protein_id}")
@@ -159,14 +161,17 @@ for file in tqdm(filelist):
             #traceback.print_exc()
             wf.write(f'torsion error: {protein_id}, {resi_name}' + '\n')
             protein_res_torsions.append([[0,0], [0,0], [0,0], [0,0]])
-            protein_res_masks.append([0,0,0,0])
+            aa_list.append(resi_name)
         try:
             assert len(protein_res_torsions) == len(residues)
         except:
-            wf.write(file+'\n')
+            if file not in error_files:
+                wf.write(file+'\n')
+                error_files.append(file)
+
             continue
         
-        
-    dihedral_angles={'dihedrals': protein_res_torsions, 'dihedral_masks': protein_res_masks}
+       
+    dihedral_angles={'dihedrals': protein_res_torsions, 'aa_list': aa_list}
     with open(DIHEDRAL_DIR + protein_id + '.pickle', 'wb') as wbf:
         pickle.dump(dihedral_angles, file=wbf)

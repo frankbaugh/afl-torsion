@@ -6,6 +6,13 @@ import pickle
 import os, traceback
 from tqdm import tqdm
 
+"""
+Add the chi π periodic mask, and save all the data into a single pkl
+
+
+"""
+
+
 PDB_DIR='/rds/project/rds-a1NGKrlJtrw/dyna_mol/v2020-other-PL/'
 DATA_DIR='/rds/project/rds-a1NGKrlJtrw/dyna_mol/data_PDBBind_1024/'
 DIHEDRAL_DIR='/home/fmvb2/dihedral_folder/'
@@ -70,8 +77,10 @@ def get_filelist():
 
 filelist = get_filelist()
 
+
 for file in tqdm(filelist):
     protein_periodic_masks = []
+    
     
     protein_id = file.replace('_protein.pdb', '')
     print(f'id: f{protein_id}')
@@ -80,8 +89,7 @@ for file in tqdm(filelist):
     structure=parser.get_structure(protein_id, filepath)
     
     residues = structure.get_residues()
-    protein_res_torsions=[]
-    protein_res_masks=[]
+
     
     for resi in residues:
         resi_name = resi.get_resname() 
@@ -91,7 +99,7 @@ for file in tqdm(filelist):
     with open(DIHEDRAL_DIR + protein_id + '.pickle', 'rb') as file:
         torsion_dict = pickle.load(file)
     
-    torsion_dict['periodic_mask'] = protein_periodic_masks
+    torsion_dict['periodic_masks'] = protein_periodic_masks
     
     with open(DIHEDRAL_DIR + protein_id + '_periodic.pickle', 'wb') as wbf:
         pickle.dump(torsion_dict, file=wbf)
