@@ -1,0 +1,71 @@
+import pandas as pd
+from Bio.PDB.PDBParser import PDBParser
+from Bio.PDB import calc_dihedral
+import numpy as np
+import pickle
+import os, traceback
+from tqdm import tqdm
+
+"""
+DOES two things to torsion data
+1) Convert pdb ID to Shengyu ID
+2) Convert each AA name into a single value [0->20]
+
+"""
+
+
+PDB_DIR='/rds/project/rds-a1NGKrlJtrw/dyna_mol/v2020-other-PL/'
+DIHEDRAL_DIR= '/home/fmvb2/rds/rds-binding-a1NGKrlJtrw/dihedral_data/'
+CSV_PATH = ''
+
+aas=["ALA",
+"ARG",
+"ASN",
+"ASP",
+"CYS",
+"GLU",
+"GLN",
+"GLY",
+"HIS",
+"HSD",
+"HSE",
+"ILE",
+"LEU",
+"LYS",
+"MET",
+"PHE",
+"PRO",
+"SER",
+"THR",
+"TRP",
+"TYR",
+"VAL"]
+
+def get_filelist():
+    filelist = []
+    for subdir, dirs, files in os.walk(DIHEDRAL_DIR):
+        for file in files:
+            if '.pickle' in file:
+                filelist.append(file)
+#print(filelist)
+    return filelist
+
+
+filelist = get_filelist()
+
+
+for file in tqdm(filelist):
+
+    protein_id = file.replace('.pickle', '')
+        
+    with open(DIHEDRAL_DIR + protein_id + '.pickle', 'rb') as file:
+        torsion_dict = pickle.load(file)
+    
+    torsion_dict['aa_index'] = [aas.index(aa) for aa in torsion_dict['aa_list']]
+    pdb = pd.read_csv(CSV_PATH)
+    
+    # TODO: change this to the correct haedings, and find the file
+    shengyu_id = pdb.loc[pdb['pdb_id'] == protein_id, 'shegyu_id'].values[0]
+    
+    with open(DIHEDRAL_DIR + shengyu_id + '.pickle', 'wb') as wbf:
+        pickle.dump(torsion_dict, file=wbf)
