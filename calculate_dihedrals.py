@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 PDB_DIR='/rds/project/rds-a1NGKrlJtrw/dyna_mol/v2020-other-PL/'
 DATA_DIR='/rds/project/rds-a1NGKrlJtrw/dyna_mol/data_PDBBind_1024/'
-DIHEDRAL_DIR='/home/fmvb2/dihedral_folder/'
+DIHEDRAL_DIR='/rds/user/fmvb2/rds-binding-a1NGKrlJtrw/dihedral_data/'
 
 chi_angles_atoms = {
     "ALA": [],
