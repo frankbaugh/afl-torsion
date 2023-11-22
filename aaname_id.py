@@ -7,10 +7,9 @@ import os, traceback
 from tqdm import tqdm
 
 """
-DOES two things to torsion data
+DOES three things to torsion data
 1) Convert pdb ID to Shengyu ID
 2) Convert each AA name into a single value [0->20]
-
 """
 
 
