@@ -1,5 +1,5 @@
 import sys
-sys.path.append('/home/fmvb2/torch_af_ligand/')
+sys.path.append('/home/fmvb2/torch_af_ligand/afl/')
 from data.features import pdb_feat_loader
 
 PDB_DIR='/rds/project/rds-a1NGKrlJtrw/dyna_mol/v2020-other-PL/3sm2/'
