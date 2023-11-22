@@ -56,11 +56,13 @@ filelist = get_filelist()
 for file in tqdm(filelist):
 
     protein_id = file.replace('.pickle', '')
-        
+    
+    """
     with open(DIHEDRAL_DIR + protein_id + '.pickle', 'rb') as file:
         torsion_dict = pickle.load(file)
     
     torsion_dict['aa_index'] = [aas.index(aa) for aa in torsion_dict['aa_list']]
+    """
     pdb = pd.read_csv(CSV_PATH, usecols=['pdb', 'id'])
     
     # TODO: change this to the correct haedings, and find the file
@@ -69,4 +71,5 @@ for file in tqdm(filelist):
     
     """
     with open(DIHEDRAL_DIR + shengyu_id + '.pickle', 'wb') as wbf:
-        pickle.dump(torsion_dict, file=wbf)"""
+        pickle.dump(torsion_dict, file=wbf)
+    """
