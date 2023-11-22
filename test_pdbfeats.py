@@ -1,5 +1,6 @@
 import sys
 sys.path.append('/home/fmvb2/')
+sys.path.append('/home/fmvb2/openfold/')
 import openfold
 from torch_af_ligand.afl.data import features
 
