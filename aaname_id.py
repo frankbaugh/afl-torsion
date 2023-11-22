@@ -61,7 +61,7 @@ for file in tqdm(filelist):
         torsion_dict = pickle.load(file)
     
     torsion_dict['aa_index'] = [aas.index(aa) for aa in torsion_dict['aa_list']]
-    pdb = pd.read_csv(CSV_PATH)
+    pdb = pd.read_csv(CSV_PATH, usecols=['pdb', 'id'])
     
     # TODO: change this to the correct haedings, and find the file
     shengyu_id = pdb.loc[pdb['pdb'] == protein_id, 'id'].values[0]
