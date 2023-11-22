@@ -68,4 +68,4 @@ for file in tqdm(filelist):
     shengyu_id = pdb.loc[pdb['pdb'] == protein_id, 'id'].values[0]
     # print(f"pdb: {protein_id}   shengyu: {shengyu_id}")
     
-    np.save(DIHEDRAL_DIR + shengyu_id + '_dihedrals.npy', torsion_array)
+    np.save(DIHEDRAL_DIR + str(shengyu_id) + '_dihedrals.npy', torsion_array)
