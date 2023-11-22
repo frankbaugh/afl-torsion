@@ -9,13 +9,13 @@ from tqdm import tqdm
 """
 DOES three things to torsion data
 1) Convert pdb ID to Shengyu ID
-2) Convert each AA name into a single value [0->20]
+2) Convert each AA name into a single value [0->20] (this may not be necessary)
 """
 
 
 PDB_DIR='/rds/project/rds-a1NGKrlJtrw/dyna_mol/v2020-other-PL/'
 DIHEDRAL_DIR= '/home/fmvb2/rds/rds-binding-a1NGKrlJtrw/dihedral_data/'
-CSV_PATH = ''
+CSV_PATH = '/rds/project/rds-a1NGKrlJtrw/dyna_mol/pdb_1024_processed_trunc.csv'
 
 aas=["ALA",
 "ARG",
@@ -64,7 +64,9 @@ for file in tqdm(filelist):
     pdb = pd.read_csv(CSV_PATH)
     
     # TODO: change this to the correct haedings, and find the file
-    shengyu_id = pdb.loc[pdb['pdb_id'] == protein_id, 'shegyu_id'].values[0]
+    shengyu_id = pdb.loc[pdb['pdb'] == protein_id, 'id'].values[0]
+    print(f"pdb: {protein_id}   shengyu: {shengyu_id}")
     
+    """
     with open(DIHEDRAL_DIR + shengyu_id + '.pickle', 'wb') as wbf:
-        pickle.dump(torsion_dict, file=wbf)
+        pickle.dump(torsion_dict, file=wbf)"""
